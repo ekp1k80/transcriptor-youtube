@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Transcribí videos de YouTube en Google Colab.">
+  <title>Transcripciones de YouTube</title>
+  <style>
+    :root { --ink:#172033; --muted:#62708a; --rose:#e11d48; --rose-dark:#be123c; --paper:#fffdfd; }
+    * { box-sizing:border-box; }
+    body { margin:0; color:var(--ink); font:16px/1.55 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; background:radial-gradient(circle at 14% 0,#ffe4e6 0,transparent 28rem),linear-gradient(135deg,#f8fafc,#fff7f8); }
+    main { width:min(960px,calc(100% - 32px)); margin:auto; padding:55px 0 40px; }
+    .hero { text-align:center; padding:20px 12px 44px; }
+    .tag { display:inline-block; color:#9f1239; background:#ffe4e6; padding:5px 12px; border-radius:99px; font-weight:700; font-size:.87rem; }
+    h1 { font-size:clamp(2.25rem,7vw,4.5rem); letter-spacing:-.065em; line-height:1.02; margin:18px 0; }
+    .lead { max-width:610px; margin:0 auto; color:var(--muted); font-size:1.12rem; }
+    .open { display:inline-flex; align-items:center; justify-content:center; gap:10px; margin-top:28px; padding:15px 25px; color:white; background:linear-gradient(135deg,var(--rose),var(--rose-dark)); border-radius:13px; font-size:1.08rem; font-weight:750; text-decoration:none; box-shadow:0 12px 30px #e11d4850; transition:.18s transform,.18s box-shadow; }
+    .open:hover { transform:translateY(-2px); box-shadow:0 16px 35px #e11d4860; }
+    .hint { margin-top:10px; color:var(--muted); font-size:.88rem; }
+    .steps { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }
+    .card { background:#ffffffd9; border:1px solid #f1d5dc; border-radius:17px; padding:24px; box-shadow:0 9px 30px #52202c0a; }
+    .number { display:grid; place-items:center; width:34px; height:34px; border-radius:50%; color:#9f1239; background:#ffe4e6; font-weight:800; }
+    h2 { margin:15px 0 6px; font-size:1.16rem; }
+    .card p { margin:0; color:var(--muted); }
+    .notice { display:flex; gap:14px; margin:28px 0; padding:18px 22px; background:#fff; border-left:4px solid #f59e0b; border-radius:10px; color:#4b5563; }
+    .faq { margin-top:38px; }
+    .faq h2 { font-size:1.5rem; }
+    details { background:#ffffffbc; border-bottom:1px solid #e5e7eb; padding:15px 6px; }
+    summary { cursor:pointer; font-weight:700; }
+    details p { color:var(--muted); margin:10px 0 0; }
+    footer { text-align:center; margin-top:45px; color:var(--muted); font-size:.9rem; }
+    @media (max-width:650px) { main { padding-top:28px; } .steps { grid-template-columns:1fr; } }
+  </style>
+</head>
+<body>
+  <main>
+    <section class="hero">
+      <span class="tag">WHISPER LARGE-V3 TURBO</span>
+      <h1>Convertí videos<br>en texto.</h1>
+      <p class="lead">Pegá enlaces de YouTube, generá la transcripción y descargá los subtítulos. No hace falta instalar nada.</p>
+      <a class="open" id="colab-link" href="youtube_whisper_turbo_colab.ipynb">▶ Abrir el transcriptor en Google Colab</a>
+      <div class="hint">Se abre en una pestaña nueva y usás tu cuenta de Google.</div>
+    </section>
+
+    <section class="steps" aria-label="Cómo usarlo">
+      <article class="card"><div class="number">1</div><h2>Abrí el Colab</h2><p>Presioná el botón de arriba e iniciá sesión en Google si todavía no lo hiciste.</p></article>
+      <article class="card"><div class="number">2</div><h2>Conectá y ejecutá</h2><p>En Colab, tocá <b>Conectar</b> y luego <b>Entorno de ejecución → Ejecutar todas</b>.</p></article>
+      <article class="card"><div class="number">3</div><h2>Pegá y descargá</h2><p>Cuando cargue la pantalla rosa, pegá las URLs y descargá el ZIP con TXT y SRT.</p></article>
+    </section>
+
+    <aside class="notice"><span>💡</span><span>Para mejores resultados, elegí <b>T4 GPU</b> en <b>Entorno de ejecución → Cambiar tipo de entorno de ejecución</b>, antes de ejecutar todo.</span></aside>
+
+    <section class="faq">
+      <h2>Preguntas rápidas</h2>
+      <details><summary>¿Qué recibo al final?</summary><p>Un archivo ZIP con una transcripción <b>.txt</b> y subtítulos <b>.srt</b> por cada video procesado.</p></details>
+      <details><summary>¿Puedo cargar más de un video?</summary><p>Sí. En el campo de URLs pegá un enlace por línea.</p></details>
+      <details><summary>¿Tengo que instalar algo?</summary><p>No. Google Colab instala las herramientas por vos al ejecutar el notebook.</p></details>
+      <details><summary>¿Por qué debo presionar “Ejecutar todas”?</summary><p>Google exige esa confirmación por seguridad. Después de eso, la interfaz se usa con botones normales.</p></details>
+    </section>
+    <footer>Usá contenido propio o con autorización para descargar y transcribir.</footer>
+  </main>
+  <script>
+    // En GitHub Pages de proyecto, crea automáticamente el enlace de Colab.
+    (() => {
+      const host = location.hostname;
+      const segments = location.pathname.split('/').filter(Boolean);
+      if (host.endsWith('.github.io') && segments.length) {
+        const owner = host.split('.')[0];
+        const repo = segments[0];
+        document.querySelector('#colab-link').href = `https://colab.research.google.com/github/${owner}/${repo}/blob/main/youtube_whisper_turbo_colab.ipynb`;
+      }
+    })();
+  </script>
+</body>
+</html>
